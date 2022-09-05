@@ -4,6 +4,7 @@ import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
+import { RiUserLine, RiCalendarLine } from 'react-icons/ri';
 import { getPrismicClient } from '../services/prismic';
 import styles from './home.module.scss';
 
@@ -27,7 +28,9 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const blogTitle = '<MausaDev />';
+  const blogTitleStart = '<';
+  const blogTitleMiddle = ' ';
+  const blogTitleEnd = '/>.'
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState<string | null>(
     postsPagination.next_page
@@ -45,7 +48,13 @@ export default function Home({ postsPagination }: HomeProps) {
           author: post.data.author,
         },
 
-        first_publication_date: post.first_publication_date,
+        first_publication_date: new Date(
+          post.first_publication_date
+        ).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'long',
+          year: 'numeric',
+        }),
       }));
 
       setNextPage(response.next_page);
@@ -59,15 +68,21 @@ export default function Home({ postsPagination }: HomeProps) {
         <title>Home | Mausa Dev</title>
       </Head>
       <main className={styles.contentContainer}>
-        <h1>{blogTitle}</h1>
         <div className={styles.content}>
+          <h1>
+            {blogTitleStart}
+            <span>{blogTitleMiddle}</span>
+            {blogTitleEnd}
+          </h1>
           {posts.map(post => (
             <Link key={post.uid} href={`/posts/${post.uid}`}>
               <a>
                 <strong>{post.data.title}</strong>
                 <p className={styles.subtitle}>{post.data.subtitle}</p>
                 <div className={styles.postInfo}>
+                  <RiCalendarLine size={20} />
                   <time>{post.first_publication_date}</time>
+                  <RiUserLine size={20} />
                   <p>{post.data.author}</p>
                 </div>
               </a>

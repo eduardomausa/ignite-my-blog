@@ -4,9 +4,12 @@
     padding: 0 2rem;
 
     h1 {
-        text-align: center;
-        margin-top: 3rem;
+        margin-bottom: 2rem;
         color: var(--cyan-500);
+
+        span {
+            color: var(--white);
+        }
     }
 }
 
@@ -24,10 +27,13 @@
         strong {
             font-size: 1.5rem;
             font-weight: 900;
+            transition: color 0.2s;
         }
 
         .subtitle {
             margin-top: 0.5rem;
+            transition: color 0.2s;
+
         }
 
         .postInfo {
@@ -35,10 +41,19 @@
             margin-top: 1.25rem;
             font-size: 1rem;
             color: var(--gray-300);
+            align-items: center;
+
+            time {
+                padding: 0 4rem 0 0.5rem;
+            }
 
             p {
-                padding-left: 4rem;
+                padding-left: 0.5rem;
             }
+        }
+
+        &:hover {
+            color: var(--gray-300);
         }
     }
 
@@ -49,5 +64,10 @@
         color: var(--cyan-500);
         font-weight: 600;
         font-size: 1.2rem;
+        transition: filter 0.3s;
+
+        &:hover {
+            filter: brightness(0.6);
+        }
     }
 }
