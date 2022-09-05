@@ -1,4 +1,6 @@
-import next, { GetStaticProps } from 'next';
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+/* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { GetStaticProps } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -83,8 +85,6 @@ export default function Home({ postsPagination }: HomeProps) {
 export const getStaticProps: GetStaticProps = async () => {
   const prismic = getPrismicClient({});
   const postsResponse = await prismic.getByType('post', { pageSize: 1 });
-
-  console.log(postsResponse)
 
   const posts = postsResponse.results.map(post => {
     return {
