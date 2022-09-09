@@ -30,7 +30,7 @@ interface HomeProps {
 export default function Home({ postsPagination }: HomeProps) {
   const blogTitleStart = '<';
   const blogTitleMiddle = ' ';
-  const blogTitleEnd = '/>.'
+  const blogTitleEnd = '/>.';
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState<string | null>(
     postsPagination.next_page
