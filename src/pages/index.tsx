@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/explicit-module-boundary-types */
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
+import { format } from 'date-fns';
+import ptBR from 'date-fns/locale/pt-BR';
 import { GetStaticProps } from 'next';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useState } from 'react';
 import { RiUserLine, RiCalendarLine } from 'react-icons/ri';
+import Header from '../components/Header';
 import { getPrismicClient } from '../services/prismic';
 import styles from './home.module.scss';
+import commomStyles from '../styles/common.module.scss';
 
 interface Post {
   uid?: string;
@@ -28,69 +31,69 @@ interface HomeProps {
 }
 
 export default function Home({ postsPagination }: HomeProps) {
-  const blogTitleStart = '<';
-  const blogTitleMiddle = ' ';
-  const blogTitleEnd = '/>.';
   const [posts, setPosts] = useState(postsPagination.results);
   const [nextPage, setNextPage] = useState<string | null>(
     postsPagination.next_page
   );
 
   async function handleFetchMorePosts() {
-    if (nextPage) {
-      const response = await (await fetch(nextPage)).json();
-
-      const newPosts = response.results.map((post: Post) => ({
-        uid: post.uid,
-        data: {
-          title: post.data.title,
-          subtitle: post.data.subtitle,
-          author: post.data.author,
-        },
-
-        first_publication_date: new Date(
-          post.first_publication_date
-        ).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: 'long',
-          year: 'numeric',
-        }),
-      }));
-
-      setNextPage(response.next_page);
-      setPosts(oldState => [...oldState, ...newPosts]);
+    if (nextPage === null) {
+      return;
     }
+
+    const response = await fetch(nextPage).then(Response => Response.json());
+    setNextPage(response.next_page);
+
+    const newPosts = response.results.map((post: Post) => ({
+      uid: post.uid,
+      data: {
+        title: post.data.title,
+        subtitle: post.data.subtitle,
+        author: post.data.author,
+      },
+
+      first_publication_date: new Date(
+        post.first_publication_date
+      ).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: 'long',
+        year: 'numeric',
+      }),
+    }));
+
+    setPosts([...posts, ...newPosts]);
   }
 
   return (
     <>
-      <Head>
-        <title>Home | Mausa Dev</title>
-      </Head>
-      <main className={styles.contentContainer}>
+      <Header />
+      <main className={commomStyles.container}>
         <div className={styles.content}>
-          <h1>
-            {blogTitleStart}
-            <span>{blogTitleMiddle}</span>
-            {blogTitleEnd}
-          </h1>
           {posts.map(post => (
-            <Link key={post.uid} href={`/posts/${post.uid}`}>
+            <Link key={post.uid} href={`/post/${post.uid}`}>
               <a>
-                <strong>{post.data.title}</strong>
-                <p className={styles.subtitle}>{post.data.subtitle}</p>
-                <div className={styles.postInfo}>
-                  <RiCalendarLine size={20} />
-                  <time>{post.first_publication_date}</time>
-                  <RiUserLine size={20} />
-                  <p>{post.data.author}</p>
+                <h2>{post.data.title}</h2>
+                <p>{post.data.subtitle}</p>
+                <div className={commomStyles.postInfo}>
+                  <div>
+                    <RiCalendarLine size={20} />
+                    <time>{post.first_publication_date}</time>
+                  </div>
+                  <div>
+                    <RiUserLine size={20} />
+                    <p>{post.data.author}</p>
+                  </div>
                 </div>
               </a>
             </Link>
           ))}
-          <button type="button" onClick={handleFetchMorePosts}>
-            Carregar mais posts
-          </button>
+          {nextPage ? (
+            <button type="button" onClick={handleFetchMorePosts}>
+              Carregar mais posts
+            </button>
+          ) : (
+            <div />
+          )}
         </div>
       </main>
     </>
@@ -109,13 +112,13 @@ export const getStaticProps: GetStaticProps = async () => {
         subtitle: post.data.subtitle,
         author: post.data.author,
       },
-      first_publication_date: new Date(
-        post.first_publication_date
-      ).toLocaleDateString('pt-BR', {
-        day: '2-digit',
-        month: 'long',
-        year: 'numeric',
-      }),
+      first_publication_date: format(
+        new Date(post.first_publication_date),
+        'dd MM yyyy',
+        {
+          locale: ptBR,
+        }
+      ),
     };
   });
 

@@ -1,11 +1,35 @@
-.container {
+.banner {
+    width: 100%;
 
+    img {
+        width: 100%;
+    }
 }
 
-.post {
+.content {
+    .postHeader {
+        margin-bottom: 2rem;
+    }
 
-}
+    h1 {
+        font-size: 3rem;
+        font-weight: 700;
+    }
 
-.postContent {
-    
+    .postContent {
+        text-align: justify;
+        font-size: 1rem;
+        font-weight: 400;
+        
+        .postBody {
+            strong {
+                font-size: 1.25rem;
+                font-weight: bold;
+            }
+
+            p {
+                margin: 1rem auto;
+            }
+        }
+    }
 }

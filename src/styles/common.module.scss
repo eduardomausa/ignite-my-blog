@@ -1,1 +1,20 @@
-// TODO
+.container {
+    max-width: 720px;
+    margin: 4rem auto;
+}
+
+.postInfo {
+    display: flex;
+    flex-direction: row;
+    margin: 1.25rem auto 4rem;
+
+    div {
+        display: flex;
+        align-items: center;
+
+        p, time {
+            margin: 0 2.5rem 0 0.5rem;
+            font-size: 0.75rem;
+        }
+    }
+}

@@ -1,1 +1,11 @@
-// TODO
+.logo {
+
+    img {
+        transition: 0.3s;
+
+        &:hover {
+            cursor: pointer;
+            filter: brightness(0.7);
+        }
+    }
+}
